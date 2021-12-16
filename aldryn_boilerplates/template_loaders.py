@@ -9,7 +9,6 @@ import django.template.loaders.app_directories
 from django.core.exceptions import ImproperlyConfigured, SuspiciousFileOperation
 from django.template import Origin
 from django.template.loader import get_template
-from django.utils import six
 from django.utils._os import safe_join
 
 from .conf import settings
@@ -32,8 +31,6 @@ def _populate_cache():
     # plain ``templates`` folder.
 
     # At compile time, cache the directories to search.
-    if six.PY2:
-        fs_encoding = sys.getfilesystemencoding() or sys.getdefaultencoding()
     app_template_dirs = []
     for app in settings.INSTALLED_APPS:
         try:
@@ -47,8 +44,6 @@ def _populate_cache():
             'templates',
         )))
         if os.path.isdir(template_dir):
-            if six.PY2:
-                template_dir = template_dir.decode(fs_encoding)
             app_template_dirs.append(template_dir)
 
     # It won't change, so convert it to a tuple to save memory.
